@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root{--bg0:#0d0d10;--bg1:#141418;--bg2:#1c1c22;--bg3:#25252a;--txt1:#f0efe8;--txt2:#8c8b84;--txt3:#4a4946;--accent:#c9a227;--accent-h:#d9b540;--border:rgba(255,255,255,.07);--card:#18181d;--r:8px;--maxw:1160px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg0);color:var(--txt1);font-family:'DM Sans',system-ui,sans-serif;font-size:16px;line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}a{color:inherit;text-decoration:none}
+button,input,select,textarea{font-family:inherit}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg0)}::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:2px}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .65s cubic-bezier(.4,0,.2,1),transform .65s cubic-bezier(.4,0,.2,1)}.reveal.visible{opacity:1;transform:none}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}.d5{transition-delay:.5s}
+
+.btn-p{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:#110d00;padding:14px 28px;border-radius:6px;font-weight:700;font-size:14px;letter-spacing:.03em;border:none;cursor:pointer;transition:background .25s,transform .2s;text-decoration:none;line-height:1;white-space:nowrap}
+.btn-p:hover{background:var(--accent-h);transform:translateY(-1px)}
+.btn-s{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid rgba(255,255,255,.22);color:var(--txt1);padding:14px 28px;border-radius:6px;font-weight:600;font-size:14px;background:transparent;transition:border-color .25s,transform .2s;text-decoration:none;line-height:1;white-space:nowrap}
+.btn-s:hover{border-color:rgba(255,255,255,.55);transform:translateY(-1px)}
+
+.nav-link{position:relative;color:var(--txt2);font-size:14px;font-weight:500;letter-spacing:.02em;transition:color .25s;padding-bottom:3px;white-space:nowrap}
+.nav-link::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1.5px;background:var(--accent);transition:width .3s cubic-bezier(.4,0,.2,1)}
+.nav-link:hover{color:var(--txt1)}.nav-link:hover::after{width:100%}
+
+.mob-menu{position:fixed;inset:0;background:var(--bg0);z-index:998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;transform:translateX(110%);transition:transform .4s cubic-bezier(.4,0,.2,1)}
+.mob-menu.open{transform:none}
+.mob-link{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:700;color:var(--txt1);letter-spacing:.02em;transition:color .2s}
+.mob-link:hover,.mob-link:focus{color:var(--accent)}
+
+.svc-card,.ven-card,.why-item{transition:transform .3s,box-shadow .3s,border-color .3s}
+.svc-card:hover,.ven-card:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,0,0,.45);border-color:rgba(201,162,39,.3)!important}
+.why-item:hover{border-color:rgba(201,162,39,.22)!important;background:rgba(201,162,39,.03)!important}
+.test-card{transition:transform .3s}.test-card:hover{transform:translateY(-4px)}
+
+.form-field{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--txt1);padding:12px 16px;font-size:14px;outline:none;transition:border-color .25s;-webkit-appearance:none;appearance:none}
+.form-field:focus{border-color:var(--accent)}.form-field::placeholder{color:var(--txt3)}
+
+.ghost{position:absolute;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(52px,8vw,100px);color:rgba(255,255,255,.022);letter-spacing:-2px;white-space:nowrap;user-select:none;pointer-events:none;line-height:1;top:0;left:0}
+
+.btt{position:fixed;bottom:28px;right:28px;z-index:500;width:44px;height:44px;border-radius:50%;background:var(--accent);color:#110d00;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;font-size:18px;font-weight:700;line-height:1;transition:opacity .3s,transform .3s,visibility .3s,background .25s;box-shadow:0 4px 20px rgba(201,162,39,.35)}
+.btt:hover{background:var(--accent-h);transform:translateY(-2px)}.btt.hidden{opacity:0;visibility:hidden;transform:translateY(8px)}
+
+.show-mob{display:none}
+
+/* Responsive grid helpers */
+@media(max-width:1023px){
+  .hero-split{grid-template-columns:1fr!important;min-height:auto!important}
+  .two-col,.contact-grid,.appt-grid,.profile-grid{grid-template-columns:1fr!important;gap:36px!important}
+  .grid-3{grid-template-columns:repeat(2,1fr)!important}
+  .ven-grid{grid-template-columns:repeat(2,1fr)!important}
+  .trust-strip{grid-template-columns:repeat(3,1fr)!important}
+  .stat-grid{grid-template-columns:repeat(2,1fr)!important}
+  .payment-grid{grid-template-columns:repeat(3,1fr)!important}
+}
+@media(max-width:767px){
+  .grid-3,.feat-grid,.payment-grid{grid-template-columns:1fr!important}
+  .hide-mob{display:none!important}.show-mob{display:flex!important}
+  .hero-panel-txt{padding:96px 24px 48px!important}
+  .hero-panel-img{max-height:360px!important}
+  .btn-row{flex-direction:column!important;align-items:stretch!important}
+  .nav-cta{display:none!important}
+  .ven-grid{grid-template-columns:repeat(2,1fr)!important}
+  .stat-grid{grid-template-columns:repeat(2,1fr)!important}
+  .trust-strip{grid-template-columns:repeat(2,1fr)!important}
+}
+@media(max-width:479px){
+  .ven-grid{grid-template-columns:1fr!important}
+  .trust-strip{grid-template-columns:1fr!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1!important;transform:none!important;transition:none!important}
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</helmet>
+
+<!-- ═══ MOBILE MENU ═══ -->
+<div class="{{ menuClass }}" id="mob-menu">
+  <button onClick="{{ closeMenu }}" style="position:absolute;top:22px;right:24px;background:none;border:none;color:var(--txt1);font-size:26px;cursor:pointer;line-height:1;">✕</button>
+  <img src="uploads/logo.jpg" alt="Ampomah Group" style="height:52px;width:auto;mix-blend-mode:screen;margin-bottom:8px;">
+  <a href="#home" class="mob-link" onClick="{{ closeMenu }}">Home</a>
+  <a href="#about" class="mob-link" onClick="{{ closeMenu }}">About</a>
+  <a href="#ventures" class="mob-link" onClick="{{ closeMenu }}">Ventures</a>
+  <a href="#services" class="mob-link" onClick="{{ closeMenu }}">Services</a>
+  <a href="#automotive" class="mob-link" onClick="{{ closeMenu }}">Automotive</a>
+  <a href="#appointment" class="mob-link" onClick="{{ closeMenu }}">Appointment</a>
+  <a href="#contact" class="mob-link" onClick="{{ closeMenu }}">Contact</a>
+  <a href="https://foundation.ampgod.org/" class="mob-link" target="_blank" rel="noopener">Foundation</a>
+  <a href="#appointment" class="btn-p" onClick="{{ closeMenu }}" style="margin-top:14px;">Book Appointment</a>
+</div>
+
+<!-- ═══ HEADER ═══ -->
+<header id="site-header" style="position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(13,13,16,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:background .3s,border-color .3s;">
+  <div style="max-width:var(--maxw);margin:0 auto;padding:0 24px;height:68px;display:flex;align-items:center;justify-content:space-between;gap:20px;">
+    <a href="#home" style="flex-shrink:0;display:flex;align-items:center;gap:0;">
+      <img src="uploads/logo.jpg" alt="Ampomah Group" style="height:46px;width:auto;mix-blend-mode:screen;">
+    </a>
+    <nav class="hide-mob" style="display:flex;align-items:center;gap:22px;">
+      <a href="#about" class="nav-link">About</a>
+      <a href="#ventures" class="nav-link">Ventures</a>
+      <a href="#services" class="nav-link">Services</a>
+      <a href="#automotive" class="nav-link">Automotive</a>
+      <a href="#appointment" class="nav-link">Appointment</a>
+      <a href="#contact" class="nav-link">Contact</a>
+      <a href="https://foundation.ampgod.org/" class="nav-link" target="_blank" rel="noopener" style="color:var(--accent);">Foundation ↗</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
+      <a href="#appointment" class="btn-p nav-cta" style="padding:10px 20px;font-size:13px;">Book Appointment</a>
+      <button onClick="{{ toggleMenu }}" class="show-mob" style="background:none;border:none;color:var(--txt1);font-size:26px;cursor:pointer;padding:2px;line-height:1;">{{ menuIcon }}</button>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ HERO — Full Dark ═══ -->
+<section id="home" class="hero-split" style="display:grid;grid-template-columns:58fr 42fr;min-height:100vh;background:var(--bg0);">
+
+  <!-- Left: text panel -->
+  <div class="hero-panel-txt" style="background:var(--bg0);display:flex;align-items:center;padding:120px 40px 80px 0;">
+    <div style="max-width:600px;width:100%;margin-left:auto;padding-right:24px;padding-left:24px;">
+
+      <div class="reveal" style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+        <div style="width:28px;height:2px;background:var(--accent);flex-shrink:0;"></div>
+        <span style="font-size:11px;font-weight:700;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;">Ampomah Group of Companies</span>
+      </div>
+
+      <h1 class="reveal d1" style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(44px,5.5vw,82px);font-weight:800;line-height:.95;letter-spacing:-1.5px;color:var(--txt1);margin-bottom:24px;">
+        Building Business<br>Across Real Estate,<br>Travel, Logistics<br>&amp; Automotive
+      </h1>
+
+      <p class="reveal d2" style="color:var(--txt2);font-size:clamp(15px,1.4vw,17px);line-height:1.75;max-width:440px;margin-bottom:36px;">
+        Godfred Ampomah connects people with trusted business solutions across real estate, travel, delivery, automotive services, consulting, and cross-continental opportunities — from Ghana to the world.
+      </p>
+
+      <div class="btn-row reveal d3" style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+        <a href="#ventures" class="btn-p">
+          Explore Ventures
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+        </a>
+        <a href="#appointment" class="btn-s">Book Appointment</a>
+      </div>
+
+      <div class="reveal d4" style="display:flex;flex-wrap:wrap;align-items:center;gap:18px;margin-top:44px;padding-top:32px;border-top:1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:7px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent);"></div><span style="font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--txt2);">Real Estate</span></div>
+        <div style="display:flex;align-items:center;gap:7px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent);"></div><span style="font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--txt2);">Travel</span></div>
+        <div style="display:flex;align-items:center;gap:7px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent);"></div><span style="font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--txt2);">Delivery</span></div>
+        <div style="display:flex;align-items:center;gap:7px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent);"></div><span style="font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--txt2);">Automotive</span></div>
+        <div style="display:flex;align-items:center;gap:7px;"><div style="width:5px;height:5px;border-radius:50%;background:var(--accent);"></div><span style="font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--txt2);">Consulting</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Right: portrait on dark background -->
+  <div class="hero-panel-img" style="background:var(--bg0);position:relative;overflow:hidden;display:flex;align-items:flex-end;justify-content:center;min-height:580px;">
+    <!-- Gold glow -->
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 80%,rgba(201,162,39,.12) 0%,transparent 60%);z-index:0;pointer-events:none;"></div>
+    <!-- Subtle crosshatch texture -->
+    <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.014) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.014) 1px,transparent 1px);background-size:40px 40px;z-index:0;pointer-events:none;"></div>
+    <!-- Portrait -->
+    <img src="uploads/heroimage.png" alt="Godfred Ampomah — Founder &amp; CEO" style="width:92%;max-width:520px;object-fit:contain;object-position:bottom center;position:relative;z-index:1;display:block;flex-shrink:0;">
+    <!-- Left blend into text panel -->
+    <div style="position:absolute;left:0;top:0;bottom:0;width:55%;background:linear-gradient(to right,var(--bg0) 10%,rgba(13,13,16,.7) 50%,transparent 100%);z-index:2;pointer-events:none;"></div>
+    <!-- Bottom fade -->
+    <div style="position:absolute;bottom:0;left:0;right:0;height:150px;background:linear-gradient(to top,var(--bg0),transparent);z-index:2;pointer-events:none;"></div>
+    <!-- Right edge -->
+    <div style="position:absolute;right:0;top:0;bottom:0;width:15%;background:linear-gradient(to left,var(--bg0),transparent);z-index:2;pointer-events:none;"></div>
+    <!-- Top accent bar -->
+    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent 5%,var(--accent) 50%,transparent 95%);z-index:3;pointer-events:none;"></div>
+  </div>
+
+</section>
+
+<!-- ═══ TRUST STRIP ═══ -->
+<div style="background:var(--bg1);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div style="max-width:var(--maxw);margin:0 auto;">
+    <div class="trust-strip" style="display:grid;grid-template-columns:repeat(5,1fr);">
+      <div style="padding:20px 16px;display:flex;align-items:center;gap:11px;border-right:1px solid var(--border);">
+        <div style="width:34px;height:34px;flex-shrink:0;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div>
+        <div><div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--txt1);">Real Estate</div><div style="font-size:10px;color:var(--txt3);">SEMDU Real Estates</div></div>
+      </div>
+      <div style="padding:20px 16px;display:flex;align-items:center;gap:11px;border-right:1px solid var(--border);">
+        <div style="width:34px;height:34px;flex-shrink:0;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"></path></svg></div>
+        <div><div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--txt1);">Travel</div><div style="font-size:10px;color:var(--txt3);">Travel Expert</div></div>
+      </div>
+      <div style="padding:20px 16px;display:flex;align-items:center;gap:11px;border-right:1px solid var(--border);">
+        <div style="width:34px;height:34px;flex-shrink:0;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"></rect><path d="M16 8h4l3 3v5h-7V8z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg></div>
+        <div><div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--txt1);">Delivery</div><div style="font-size:10px;color:var(--txt3);">Ampomah Delivery GH</div></div>
+      </div>
+      <div style="padding:20px 16px;display:flex;align-items:center;gap:11px;border-right:1px solid var(--border);">
+        <div style="width:34px;height:34px;flex-shrink:0;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17H3V9l2-5h14l2 5v8h-2"></path><circle cx="7" cy="17" r="2"></circle><circle cx="17" cy="17" r="2"></circle><line x1="3" y1="9" x2="21" y2="9"></line></svg></div>
+        <div><div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--txt1);">Automotive</div><div style="font-size:10px;color:var(--txt3);">Car Deals &amp; Rentals</div></div>
+      </div>
+      <div style="padding:20px 16px;display:flex;align-items:center;gap:11px;">
+        <div style="width:34px;height:34px;flex-shrink:0;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path></svg></div>
+        <div><div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--txt1);">Consulting</div><div style="font-size:10px;color:var(--txt3);">Business &amp; Education</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ABOUT ═══ -->
+<section id="about" style="padding:100px 0;background:var(--bg0);">
+  <div style="max-width:var(--maxw);margin:0 auto;padding:0 24px;">
+    <div class="two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;">
+      <div>
+        <div class="reveal" style="margin-bottom:32px;position:relative;overflow:visible;">
+          <span class="ghost" style="top:-8px;">ABOUT</span>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;position:relative;">
+            <span style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--accent);">WHO WE ARE</span>
+            <div style="width:36px;height:1px;background:var(--border);"></div>
+          </div>
+          <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(30px,4vw,50px);font-weight:800;line-height:1.05;color:var(--txt1);position:relative;">Godfred Ampomah —<br>Serial Entrepreneur<br>&amp; CEO</h2>
+        </div>
+        <p class="reveal d1" style="color:var(--txt2);font-size:16px;line-height:1.8;margin-bottom:18px;">Godfred Ampomah is a serial entrepreneur from Kumasi, Ghana, and the founder of Ampomah Group of Companies. He is also the co-founder of SEMDU Real Estates and Lands, where he contributes to innovative real estate solutions that create lasting value.</p>
+        <p class="reveal d2" style="color:var(--txt2);font-size:16px;line-height:1.8;margin-bottom:18px;">Born and raised in Kumasi and now based in the United States, Godfred is committed to building businesses that foster sustainable growth and bridge opportunities between Africa and the world.</p>
+        <p class="reveal d3" style="color:var(--txt2);font-size:16px;line-height:1.8;margin-bottom:32px;">With a diverse portfolio spanning real estate, travel, delivery services, and automotive solutions, Godfred brings a unique perspective to business development and cross-continental collaboration. He is also the founder of <strong style="color:var(--txt1);font-weight:600;">The Ampomah Foundation</strong> — a non-profit dedicated to helping sick children, refugees, and prisoners.</p>
+        <div class="reveal d4" style="display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="#ventures" class="btn-p">Explore Companies</a>
+          <a href="https://foundation.ampgod.org/" class="btn-s" target="_blank" rel="noopener">Visit Foundation ↗</a>
+        </div>
+      </div>
+      <div class="reveal d2">
+        <img src="uploads/pablo_maillo-building-4579244_1920.jpg" alt="Ampomah Group — Real Estate &amp; Business" style="width:100%;border-radius:12px;object-fit:cover;aspect-ratio:4/5;display:block;">
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-top:14px;">
+          <div style="font-size:13px;color:var(--accent);font-style:italic;line-height:1.6;">"My vision is to foster sustainable development and bridge opportunities between Africa and the world especially in underserved areas — not in Ghana alone but all over the world."</div>
+          <div style="margin-top:10px;font-size:12px;font-weight:600;color:var(--txt3);">— Godfred Ampomah, Founder &amp; CEO</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STATS ═══ -->
+<section style="padding:64px 0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div style="max-width:var(--maxw);margin:0 auto;padding:0 24px;">
+    <div class="stat-grid reveal" style="display:grid;grid-template-columns:repeat(4,1fr);">
+      <div style="text-align:center;padding:20px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(40px,5vw,64px);font-weight:800;color:var(--accent);line-height:1;" data-target="5" data-suffix="">5</div>
+        <div style="font-size:14px;color:var(--txt2);margin-top:6px;letter-spacing:.04em;">Companies</div>
+      </div>
+      <div style="text-align:center;padding:20px;border-left:1px solid var(--border);">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(40px,5vw,64px);font-weight:800;color:var(--accent);line-height:1;" data-target="100" data-suffix="+">100+</div>
+        <div style="font-size:14px;color:var(--txt2);margin-top:6px;letter-spacing:.04em;">Projects</div>
+      </div>
+      <div style="text-align:center;padding:20px;border-left:1px solid var(--border);">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(40px,5vw,64px);font-weight:800;color:var(--accent);line-height:1;" data-target="2" data-suffix="">2</div>
+        <div style="font-size:14px;color:var(--txt2);margin-top:6px;letter-spacing:.04em;">Continents</div>
+      </div>
+      <div style="text-align:center;padding:20px;border-left:1px solid var(--border);">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(40px,5vw,64px);font-weight:800;color:var(--accent);line-height:1;" data-target="500" data-suffix="+">500+</div>
+        <div style="font-size:14px;color:var(--txt2);margin-top:6px;letter-spacing:.04em;">Clients</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COMPANIES & VENTURES ═══ -->
+<section id="ventures" style="padding:100px 0;background:var(--bg1);">
+  <div style="max-width:var(--maxw);margin:0 auto;padding:0 24px;">
+    <div class="reveal" style="margin-bottom:52px;position:relative;overflow:hidden;">
+      <span class="ghost">VENTURES</span>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;position:relative;">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.14em;color:var(--accent);">01.</span>
+        <div style="width:40px;height:1px;background:var(--border);"></div>
+      </div>
+      <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(30px,4vw,50px);font-weight:800;line-height:1.05;color:var(--txt1);position:relative;">Companies &amp; Ventures</h2>
+      <p style="color:var(--txt2);font-size:16px;margin-top:12px;max-width:480px;position:relative;">Five active companies across real estate, luxury, delivery, travel, and automotive solutions.</p>
+    </div>
+    <div class="ven-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+
+      <div class="ven-card" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;">
+        <img src="uploads/pablo_maillo-building-4579244_1920.jpg" alt="SEMDU Real Estates" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">
+        <div style="padding:22px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div style="width:34px;height:34px;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div>
+            <span style="font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;">Real Estate</span>
+          </div>
+          <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--txt1);margin-bottom:7px;">SEMDU Real Estates</h4>
+          <p style="color:var(--txt2);font-size:14px;line-height:1.65;">Co-founder of innovative real estate solutions that create lasting value for clients in Ghana and beyond.</p>
+        </div>
+      </div>
+
+      <div class="ven-card" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;">
+        <img src="uploads/kelderreisen-rolex-4807479.jpg" alt="Rolex Representative" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;object-position:center;">
+        <div style="padding:22px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div style="width:34px;height:34px;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
+            <span style="font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;">Luxury &amp; Lifestyle</span>
+          </div>
+          <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--txt1);margin-bottom:7px;">Rolex Representative (GH)</h4>
+          <p style="color:var(--txt2);font-size:14px;line-height:1.65;">Exclusive representation of luxury timepieces, bringing world-class products to the Ghanaian market.</p>
+        </div>
+      </div>
+
+      <div class="ven-card" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;">
+        <img src="uploads/pexels-mizunokozuki-13431972.jpg" alt="Ampomah Delivery" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;object-position:top;">
+        <div style="padding:22px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div style="width:34px;height:34px;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"></rect><path d="M16 8h4l3 3v5h-7V8z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg></div>
+            <span style="font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;">Delivery &amp; Logistics</span>
+          </div>
+          <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--txt1);margin-bottom:7px;">Ampomah Delivery (GH)</h4>
+          <p style="color:var(--txt2);font-size:14px;line-height:1.65;">Reliable delivery services ensuring prompt and secure transportation of goods across Ghana.</p>
+        </div>
+      </div>
+
+      <div class="ven-card" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;">
+        <img src="uploads/kranich17-globe-7939725.jpg" alt="Travel Expert" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">
+        <div style="padding:22px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div style="width:34px;height:34px;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"></path></svg></div>
+            <span style="font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;">Travel &amp; Tourism</span>
+          </div>
+          <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--txt1);margin-bottom:7px;">Travel Expert</h4>
+          <p style="color:var(--txt2);font-size:14px;line-height:1.65;">Vacation guidance and travel planning services to create unforgettable experiences for travelers.</p>
+        </div>
+      </div>
+
+      <div class="ven-card" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;">
+        <img src="uploads/automobile.jpg" alt="Car Deals &amp; Rentals" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">
+        <div style="padding:22px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div style="width:34px;height:34px;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17H3V9l2-5h14l2 5v8h-2"></path><circle cx="7" cy="17" r="2"></circle><circle cx="17" cy="17" r="2"></circle><line x1="3" y1="9" x2="21" y2="9"></line></svg></div>
+            <span style="font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;">Automotive</span>
+          </div>
+          <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--txt1);margin-bottom:7px;">Car Deals &amp; Rentals</h4>
+          <p style="color:var(--txt2);font-size:14px;line-height:1.65;">Comprehensive automotive solutions including car sales, leasing, and rental services for all needs.</p>
+        </div>
+      </div>
+
+      <!-- Foundation card -->
+      <div class="ven-card" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;">
+        <img src="uploads/pexels-dawn-1840298_1920.jpg" alt="Ampomah Foundation" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">
+        <div style="padding:22px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div style="width:34px;height:34px;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path></svg></div>
+            <span style="font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;">Social Impact</span>
+          </div>
+          <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--txt1);margin-bottom:7px;">The Ampomah Foundation</h4>
+          <p style="color:var(--txt2);font-size:14px;line-height:1.65;margin-bottom:12px;">A non-profit dedicated to helping sick children, refugees, and prisoners — fostering hope, dignity, and sustainable development in underserved communities worldwide.</p>
+          <a href="https://foundation.ampgod.org/" target="_blank" rel="noopener" style="font-size:13px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:5px;">Visit Foundation ↗</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CORE SERVICES ═══ -->
+<section id="services" style="padding:100px 0;background:var(--bg0);">
+  <div style="max-width:var(--maxw);margin:0 auto;padding:0 24px;">
+    <div class="reveal" style="margin-bottom:52px;position:relative;overflow:hidden;">
+      <span class="ghost">SERVICES</span>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;position:relative;">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.14em;color:var(--accent);">02.</span>
+        <div style="width:40px;height:1px;background:var(--border);"></div>
+      </div>
+      <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(30px,4vw,50px);font-weight:800;line-height:1.05;color:var(--txt1);position:relative;">Core Services</h2>
+      <p style="color:var(--txt2);font-size:16px;margin-top:12px;max-width:480px;position:relative;">Trusted solutions spanning every division of Ampomah Group — from property and travel to automotive and consulting.</p>
+    </div>
+    <div class="grid-3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+
+      <div class="svc-card reveal d1" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px;display:flex;flex-direction:column;gap:14px;">
+        <div style="width:44px;height:44px;background:rgba(201,162,39,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div>
+        <div><h3 style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--txt1);margin-bottom:8px;">Real Estate</h3><p style="color:var(--txt2);font-size:14px;line-height:1.7;">Property sales, leasing, and investment opportunities through SEMDU Real Estates in Ghana.</p></div>
+        <div style="margin-top:auto;padding-top:12px;border-top:1px solid var(--border);"><a href="#appointment" style="font-size:13px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:5px;">Inquire now <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg></a></div>
+      </div>
+
+      <div class="svc-card reveal d2" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px;display:flex;flex-direction:column;gap:14px;">
+        <div style="width:44px;height:44px;background:rgba(201,162,39,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.1 13.5 19.79 19.79 0 011.02 4.84 2 2 0 013 2.84h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 10a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path></svg></div>
+        <div><h3 style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--txt1);margin-bottom:8px;">Travel &amp; Tourism</h3><p style="color:var(--txt2);font-size:14px;line-height:1.7;">Expert travel planning and vacation guidance to create memorable experiences across Africa and beyond.</p></div>
+        <div style="margin-top:auto;padding-top:12px;border-top:1px solid var(--border);"><a href="#appointment" style="font-size:13px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:5px;">Plan a trip <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg></a></div>
+      </div>
+
+      <div class="svc-card reveal d3" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px;display:flex;flex-direction:column;gap:14px;">
+        <div style="width:44px;height:44px;background:rgba(201,162,39,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"></rect><path d="M16 8h4l3 3v5h-7V8z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg></div>
+        <div><h3 style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--txt1);margin-bottom:8px;">Delivery &amp; Logistics</h3><p style="color:var(--txt2);font-size:14px;line-height:1.7;">Efficient delivery services ensuring timely and secure transportation for individuals and businesses across Ghana.</p></div>
+        <div style="margin-top:auto;padding-top:12px;border-top:1px solid var(--border);"><a href="#appointment" style="font-size:13px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:5px;">Get started <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg></a></div>
+      </div>
+
+      <div class="svc-card reveal d1" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px;display:flex;flex-direction:column;gap:14px;">
+        <div style="width:44px;height:44px;background:rgba(201,162,39,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"></path><rect x="1" y="5" width="15" height="14" rx="2"></rect></svg></div>
+        <div><h3 style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--txt1);margin-bottom:8px;">Education Consulting</h3><p style="color:var(--txt2);font-size:14px;line-height:1.7;">Guidance and support for educational opportunities and international school applications for students.</p></div>
+        <div style="margin-top:auto;padding-top:12px;border-top:1px solid var(--border);"><a href="#appointment" style="font-size:13px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:5px;">Learn more <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg></a></div>
+      </div>
+
+      <div class="svc-card reveal d2" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px;display:flex;flex-direction:column;gap:14px;">
+        <div style="width:44px;height:44px;background:rgba(201,162,39,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17H3V9l2-5h14l2 5v8h-2"></path><circle cx="7" cy="17" r="2"></circle><circle cx="17" cy="17" r="2"></circle><line x1="3" y1="9" x2="21" y2="9"></line></svg></div>
+        <div><h3 style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--txt1);margin-bottom:8px;">Automotive Solutions</h3><p style="color:var(--txt2);font-size:14px;line-height:1.7;">Comprehensive automotive services — car sales, rentals, leasing, maintenance, repair, and flexible payment plans.</p></div>
+        <div style="margin-top:auto;padding-top:12px;border-top:1px solid var(--border);"><a href="#automotive" style="font-size:13px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:5px;">View options <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg></a></div>
+      </div>
+
+      <div class="svc-card reveal d3" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px;display:flex;flex-direction:column;gap:14px;">
+        <div style="width:44px;height:44px;background:rgba(201,162,39,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path></svg></div>
+        <div><h3 style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--txt1);margin-bottom:8px;">Business Consulting</h3><p style="color:var(--txt2);font-size:14px;line-height:1.7;">Strategic business development consulting for startups and established businesses looking to scale and expand.</p></div>
+        <div style="margin-top:auto;padding-top:12px;border-top:1px solid var(--border);"><a href="#appointment" style="font-size:13px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:5px;">Book a session <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg></a></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ AUTOMOTIVE ═══ -->
+<section id="automotive" style="padding:100px 0;background:var(--bg1);">
+  <div style="max-width:var(--maxw);margin:0 auto;padding:0 24px;">
+    <div class="two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
+      <div class="reveal" style="display:flex;flex-direction:column;gap:14px;">
+        <img src="uploads/automobile.jpg" alt="Ampomah car inventory" style="width:100%;border-radius:12px;object-fit:cover;aspect-ratio:16/10;display:block;">
+        <img src="uploads/automobile2.jpg" alt="Ampomah car inventory" style="width:100%;border-radius:12px;object-fit:cover;aspect-ratio:16/10;display:block;">
+      </div>
+      <div>
+        <div class="reveal" style="margin-bottom:28px;position:relative;overflow:visible;">
+          <span class="ghost" style="top:-8px;">CARS</span>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;position:relative;">
+            <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.14em;color:var(--accent);">03.</span>
+            <div style="width:40px;height:1px;background:var(--border);"></div>
+          </div>
+          <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(30px,4vw,50px);font-weight:800;line-height:1.05;color:var(--txt1);position:relative;">Automotive Solutions</h2>
+          <p style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:600;color:var(--txt2);margin-top:8px;">Car Sales, Rentals, Maintenance, Repair &amp; Flexible Payment Plans</p>
+        </div>
+        <p class="reveal d1" style="color:var(--txt2);font-size:16px;line-height:1.8;margin-bottom:20px;">Ampomah Group supports customers with reliable automotive solutions — including car sales, rentals, leasing, maintenance, repairs, quality auto parts, and flexible ways to own a vehicle.</p>
+        <div class="reveal d2" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px;">
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:8px;"><div style="width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;"></div><span style="font-size:14px;font-weight:500;color:var(--txt1);">Car Sales</span></div>
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:8px;"><div style="width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;"></div><span style="font-size:14px;font-weight:500;color:var(--txt1);">Car Rentals</span></div>
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:8px;"><div style="width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;"></div><span style="font-size:14px;font-weight:500;color:var(--txt1);">Leasing Options</span></div>
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:8px;"><div style="width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;"></div><span style="font-size:14px;font-weight:500;color:var(--txt1);">Maintenance &amp; Repair</span></div>
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:8px;"><div style="width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;"></div><span style="font-size:14px;font-weight:500;color:var(--txt1);">Auto Parts Supply</span></div>
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:8px;"><div style="width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;"></div><span style="font-size:14px;font-weight:500;color:var(--txt1);">Flexible Payment Plans</span></div>
+        </div>
+        <div class="reveal d3" style="display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="#appointment" class="btn-p">Discuss a Vehicle</a>
+          <a href="#appointment" class="btn-s">Payment Options</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ WHY CHOOSE ═══ -->
+<section id="why" style="padding:100px 0;background:var(--bg0);">
+  <div style="max-width:var(--maxw);margin:0 auto;padding:0 24px;">
+    <div class="reveal" style="margin-bottom:52px;position:relative;overflow:hidden;text-align:center;">
+      <span class="ghost" style="left:50%;transform:translateX(-50%);">WHY US</span>
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;position:relative;">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.14em;color:var(--accent);">04.</span>
+        <div style="width:40px;height:1px;background:var(--border);"></div>
+      </div>
+      <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(30px,4vw,50px);font-weight:800;line-height:1.05;color:var(--txt1);position:relative;">Why Choose Ampomah Group</h2>
+    </div>
+    <div class="grid-3 reveal d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+      <div class="why-item" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:24px 22px;display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:38px;height:38px;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"></path></svg></div>
+        <div><h4 style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--txt1);margin-bottom:5px;">Cross-Continental Reach</h4><p style="color:var(--txt2);font-size:14px;line-height:1.65;">Operations spanning Ghana and the United States, connecting African and global opportunities.</p></div>
+      </div>
+      <div class="why-item" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:24px 22px;display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:38px;height:38px;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path></svg></div>
+        <div><h4 style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--txt1);margin-bottom:5px;">Multi-Sector Expertise</h4><p style="color:var(--txt2);font-size:14px;line-height:1.65;">Five companies delivering trusted services across real estate, travel, delivery, automotive, and consulting.</p></div>
+      </div>
+      <div class="why-item" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:24px 22px;display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:38px;height:38px;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"></path></svg></div>
+        <div><h4 style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--txt1);margin-bottom:5px;">Client-First Approach</h4><p style="color:var(--txt2);font-size:14px;line-height:1.65;">Every service is built around the customer — honest, transparent, and focused on lasting results.</p></div>
+      </div>
+      <div class="why-item" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:24px 22px;display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:38px;height:38px;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg></div>
+        <div><h4 style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--txt1);margin-bottom:5px;">Flexible Solutions</h4><p style="color:var(--txt2);font-size:14px;line-height:1.65;">From flexible car payment plans to custom travel packages — solutions that adapt to your needs.</p></div>
+      </div>
+      <div class="why-item" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:24px 22px;display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:38px;height:38px;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+        <div><h4 style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--txt1);margin-bottom:5px;">Trusted &amp; Accountable</h4><p style="color:var(--txt2);font-size:14px;line-height:1.65;">A proven track record across 500+ clients, 100+ projects, and two continents of business.</p></div>
+      </div>
+      <div class="why-item" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:24px 22px;display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:38px;height:38px;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></div>
+        <div><h4 style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--txt1);margin-bottom:5px;">Easy Appointment Booking</h4><p style="color:var(--txt2);font-size:14px;line-height:1.65;">Schedule via Google Calendar — Meet link generated instantly, owner included automatically.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ APPOINTMENT ═══ -->
+<section id="appointment" style="padding:100px 0;background:var(--bg1);">
+  <div style="max-width:var(--maxw);margin:0 auto;padding:0 24px;">
+    <div class="appt-grid" style="display:grid;grid-template-columns:5fr 7fr;gap:56px;align-items:start;">
+
+      <div>
+        <div class="reveal" style="margin-bottom:32px;position:relative;overflow:visible;">
+          <span class="ghost">BOOK</span>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;position:relative;">
+            <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.14em;color:var(--accent);">05.</span>
+            <div style="width:40px;height:1px;background:var(--border);"></div>
+          </div>
+          <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(30px,4vw,50px);font-weight:800;line-height:1.05;color:var(--txt1);position:relative;">Book an<br>Appointment</h2>
+        </div>
+        <p class="reveal d1" style="color:var(--txt2);font-size:16px;line-height:1.8;margin-bottom:28px;">Pick a date and time that works for you. A Google Calendar invite with a Meet link will be created — Godfred is automatically included so your session is confirmed instantly.</p>
+        <div class="reveal d2" style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px;">
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);">
+            <div style="width:32px;height:32px;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2"></rect></svg></div>
+            <span style="font-size:14px;color:var(--txt1);">Google Meet link auto-generated</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);">
+            <div style="width:32px;height:32px;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></div>
+            <span style="font-size:14px;color:var(--txt1);">Owner email pre-added to invite</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);">
+            <div style="width:32px;height:32px;background:rgba(201,162,39,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></div>
+            <span style="font-size:14px;color:var(--txt1);">Works with Google / Apple / Outlook</span>
+          </div>
+        </div>
+        <div class="reveal d3" style="padding:18px 20px;background:var(--bg0);border:1px solid var(--border);border-radius:var(--r);">
+          <div style="font-size:12px;color:var(--txt3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em;">Direct contact</div>
+          <div style="font-size:15px;font-weight:600;color:var(--txt1);margin-bottom:4px;">+1 616-893-2665</div>
+          <a href="http://wa.me/233530084241" target="_blank" rel="noopener" style="font-size:14px;color:var(--accent);">WhatsApp: +233 530 084 241 ↗</a>
+        </div>
+      </div>
+
+      <div class="reveal d1">
+        <div style="background:var(--bg0);border:1px solid var(--border);border-radius:12px;padding:36px;">
+
+          <sc-if value="{{ showSuccess }}" hint-placeholder-val="{{ false }}">
+            <div style="text-align:center;padding:20px 0;">
+              <div style="width:64px;height:64px;background:rgba(201,162,39,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+              <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;color:var(--txt1);margin-bottom:10px;">Booking Confirmed!</h3>
+              <p style="color:var(--txt2);font-size:15px;line-height:1.7;margin-bottom:24px;">Google Calendar opened to complete your booking. Godfred will be automatically added to the invite.</p>
+              <button class="btn-s" onClick="{{ resetForm }}">Book Another Appointment</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ showForm }}" hint-placeholder-val="{{ true }}">
+            <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--txt1);margin-bottom:24px;">Schedule a Session</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <label style="font-size:11px;font-weight:700;color:var(--txt2);letter-spacing:.06em;text-transform:uppercase;">Name *</label>
+                <input class="form-field" type="text" placeholder="Your full name" value="{{ formName }}" onChange="{{ setName }}">
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <label style="font-size:11px;font-weight:700;color:var(--txt2);letter-spacing:.06em;text-transform:uppercase;">Date *</label>
+                <input class="form-field" type="date" value="{{ formDate }}" min="{{ minDate }}" onChange="{{ setDate }}">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <label style="font-size:11px;font-weight:700;color:var(--txt2);letter-spacing:.06em;text-transform:uppercase;">Time *</label>
+                <input class="form-field" type="time" value="{{ formTime }}" onChange="{{ setTime }}">
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <label style="font-size:11px;font-weight:700;color:var(--txt2);letter-spacing:.06em;text-transform:uppercase;">Meeting Type</label>
+                <select class="form-field" value="{{ formType }}" onChange="{{ setType }}">
+                  <option value="Video Consultation">Video Consultation</option>
+                  <option value="General Business Meeting">General Business Meeting</option>
+                  <option value="Real Estate Inquiry">Real Estate Inquiry</option>
+                  <option value="Travel Consultation">Travel Consultation</option>
+                  <option value="Investment Strategy Session">Investment Strategy Session</option>
+                  <option value="Delivery / Logistics Inquiry">Delivery / Logistics Inquiry</option>
+                  <option value="Car Purchase Inquiry">Car Purchase Inquiry</option>
+                  <option value="Car Rental Inquiry">Car Rental Inquiry</option>
+                  <option value="Maintenance &amp; Repair">Maintenance &amp; Repair</option>
+                  <option value="Payment Plan Discussion">Payment Plan Discussion</option>
+                  <option value="Education Consulting">Education Consulting</option>
+                  <option value="Business Consulting">Business Consulting</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px;">
+              <label style="font-size:11px;font-weight:700;color:var(--txt2);letter-spacing:.06em;text-transform:uppercase;">Notes (optional)</label>
+              <textarea class="form-field" placeholder="Tell us what you'd like to discuss..." rows="3" value="{{ formNotes }}" onChange="{{ setNotes }}"></textarea>
+            </div>
+            <sc-if value="{{ hasError }}" hint-placeholder-val="{{ false }}">
+              <div style="background:rgba(220,50,50,.08);border:1px solid rgba(220,50,50,.2);border-radius:6px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#f87171;">Please fill in your name, date, and preferred time.</div>
+            </sc-if>
+            <button class="btn-p" onClick="{{ submitForm }}" style="width:100%;padding:15px;font-size:15px;">
+              Book via Google Calendar
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+            </button>
+            <p style="text-align:center;font-size:12px;color:var(--txt3);margin-top:12px;">You'll be redirected to Google Calendar to confirm. A Meet link will be generated automatically.</p>
+          </sc-if>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ═══ -->
+<section id="testimonials" style="padding:100px 0;background:var(--bg0);">
+  <div style="max-width:var(--maxw);margin:0 auto;padding:0 24px;">
+    <div class="reveal" style="margin-bottom:52px;position:relative;overflow:hidden;text-align:center;">
+      <span class="ghost" style="left:50%;transform:translateX(-50%);">STORIES</span>
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;position:relative;">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.14em;color:var(--accent);">06.</span>
+        <div style="width:40px;height:1px;background:var(--border);"></div>
+      </div>
+      <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(30px,4vw,50px);font-weight:800;line-height:1.05;color:var(--txt1);position:relative;">What People Say</h2>
+    </div>
+    <div class="grid-3 reveal d1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+
+      <div class="test-card" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px;display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;gap:3px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></div>
+        <p style="color:var(--txt2);font-size:15px;line-height:1.75;font-style:italic;">"Godfred's vision and execution in the real estate sector transformed our investment portfolio. His innovative approach is unmatched."</p>
+        <div style="display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:14px;border-top:1px solid var(--border);">
+          <div style="width:36px;height:36px;background:var(--bg2);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;color:var(--accent);">KA</div>
+          <div><div style="font-size:14px;font-weight:600;color:var(--txt1);">Kwame Adjekum</div><div style="font-size:12px;color:var(--txt3);">Real Estate Investor</div></div>
+        </div>
+      </div>
+
+      <div class="test-card" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px;display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;gap:3px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></div>
+        <p style="color:var(--txt2);font-size:15px;line-height:1.75;font-style:italic;">"Working with Ampomah Group has been a game-changer for our business expansion into Ghana. Their expertise and connections are invaluable."</p>
+        <div style="display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:14px;border-top:1px solid var(--border);">
+          <div style="width:36px;height:36px;background:var(--bg2);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;color:var(--accent);">JA</div>
+          <div><div style="font-size:14px;font-weight:600;color:var(--txt1);">Jennice Arda</div><div style="font-size:12px;color:var(--txt3);">Business Owner</div></div>
+        </div>
+      </div>
+
+      <div class="test-card" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px;display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;gap:3px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></div>
+        <p style="color:var(--txt2);font-size:15px;line-height:1.75;font-style:italic;">"The travel guidance I received was exceptional. Every detail was perfectly arranged, making my trip to Ghana unforgettable."</p>
+        <div style="display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:14px;border-top:1px solid var(--border);">
+          <div style="width:36px;height:36px;background:var(--bg2);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;color:var(--accent);">DJ</div>
+          <div><div style="font-size:14px;font-weight:600;color:var(--txt1);">David Johnson</div><div style="font-size:12px;color:var(--txt3);">Travel Client</div></div>
+        </div>
+      </div>
+
+      <div class="test-card" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px;display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;gap:3px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></div>
+        <p style="color:var(--txt2);font-size:15px;line-height:1.75;font-style:italic;">"SEMDU Real Estates helped me find my dream home in Accra. Their professionalism and market knowledge made the process seamless."</p>
+        <div style="display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:14px;border-top:1px solid var(--border);">
+          <div style="width:36px;height:36px;background:var(--bg2);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;color:var(--accent);">AS</div>
+          <div><div style="font-size:14px;font-weight:600;color:var(--txt1);">Abena Sarpong</div><div style="font-size:12px;color:var(--txt3);">Home Owner — Accra</div></div>
+        </div>
+      </div>
+
+      <!-- Vision quote card -->
+      <div style="background:var(--accent);border-radius:var(--r);padding:28px;display:flex;flex-direction:column;justify-content:space-between;gap:14px;grid-column:span 2;">
+        <div style="font-size:15px;line-height:1.8;color:#110d00;font-style:italic;font-weight:500;">"My vision is to foster sustainable development and bridge opportunities between Africa and the world — especially in underserved areas, not in Ghana alone but all over the world."</div>
+        <div style="display:flex;align-items:center;gap:12px;padding-top:14px;border-top:1px solid rgba(0,0,0,.15);">
+          <img src="uploads/logo.jpg" alt="Ampomah Group" style="height:32px;width:auto;mix-blend-mode:multiply;border-radius:4px;">
+          <div><div style="font-size:14px;font-weight:700;color:#110d00;">Godfred Ampomah</div><div style="font-size:12px;color:rgba(0,0,0,.55);">Founder &amp; CEO — Ampomah Group of Companies</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROFILE / DIGITAL BUSINESS CARD ═══ -->
+<section id="profile" style="padding:100px 0;background:var(--bg2);">
+  <div style="max-width:var(--maxw);margin:0 auto;padding:0 24px;">
+    <div class="profile-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;">
+      <div class="reveal">
+        <img src="uploads/heroimage.png" alt="Godfred Ampomah" style="width:100%;max-width:440px;object-fit:contain;border-radius:12px;background:var(--bg3);display:block;padding:0;">
+      </div>
+      <div>
+        <div class="reveal" style="margin-bottom:28px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <span style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--accent);">FOUNDER &amp; CEO</span>
+            <div style="width:36px;height:1px;background:var(--border);"></div>
+          </div>
+          <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(30px,4vw,52px);font-weight:800;line-height:1.05;color:var(--txt1);">Godfred Ampomah</h2>
+          <p style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:600;color:var(--accent);margin-top:6px;">CEO of AGOC · Serial Entrepreneur</p>
+        </div>
+        <p class="reveal d1" style="color:var(--txt2);font-size:16px;line-height:1.8;margin-bottom:20px;">Serial entrepreneur from Kumasi, Ghana — now based in the United States — building businesses that bridge Africa and the world across real estate, travel, delivery, automotive, and consulting.</p>
+        <div class="reveal d2" style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px;">
+          <div style="display:flex;align-items:center;gap:12px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.1 13.5 19.79 19.79 0 011.02 4.84 2 2 0 013 2.84h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 10a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path></svg><span style="font-size:14px;color:var(--txt1);">+1 616-893-2665</span></div>
+          <div style="display:flex;align-items:center;gap:12px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg><a href="mailto:business@ampomahgroup.com" style="font-size:14px;color:var(--txt1);">business@ampomahgroup.com</a></div>
+          <div style="display:flex;align-items:center;gap:12px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span style="font-size:14px;color:var(--txt1);">United States · Ghana</span></div>
+        </div>
+        <div class="reveal d3" style="display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="https://blinq.me/cmeq1jfsv0jv7s60nagesh8dc" target="_blank" rel="noopener" class="btn-p">View Digital Business Card ↗</a>
+          <a href="#appointment" class="btn-s">Book a Meeting</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ═══ -->
+<section id="contact" style="padding:100px 0;background:var(--bg0);">
+  <div style="max-width:var(--maxw);margin:0 auto;padding:0 24px;">
+    <div class="reveal" style="margin-bottom:52px;position:relative;overflow:hidden;">
+      <span class="ghost">CONTACT</span>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;position:relative;">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.14em;color:var(--accent);">07.</span>
+        <div style="width:40px;height:1px;background:var(--border);"></div>
+      </div>
+      <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(30px,4vw,50px);font-weight:800;line-height:1.05;color:var(--txt1);position:relative;">Get In Touch</h2>
+      <p style="color:var(--txt2);font-size:16px;margin-top:12px;max-width:440px;position:relative;">Reach Godfred directly for any business inquiry across any division of Ampomah Group.</p>
+    </div>
+    <div class="contact-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:56px;">
+
+      <div class="reveal" style="display:flex;flex-direction:column;gap:12px;">
+        <a href="tel:+16168932665" style="display:flex;align-items:center;gap:14px;padding:18px 20px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);transition:border-color .25s;" style-hover="border-color:rgba(201,162,39,.25)">
+          <div style="width:42px;height:42px;background:rgba(201,162,39,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.1 13.5 19.79 19.79 0 011.02 4.84 2 2 0 013 2.84h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 10a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path></svg></div>
+          <div><div style="font-size:12px;color:var(--txt3);margin-bottom:2px;">Phone</div><div style="font-size:15px;font-weight:600;color:var(--txt1);">+1 616-893-2665</div></div>
+        </a>
+        <a href="http://wa.me/233530084241" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:14px;padding:18px 20px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);transition:border-color .25s;" style-hover="border-color:rgba(201,162,39,.25)">
+          <div style="width:42px;height:42px;background:rgba(201,162,39,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path></svg></div>
+          <div><div style="font-size:12px;color:var(--txt3);margin-bottom:2px;">WhatsApp</div><div style="font-size:15px;font-weight:600;color:var(--txt1);">+233 530 084 241</div></div>
+        </a>
+        <a href="mailto:ampomahgroupservices@gmail.com" style="display:flex;align-items:center;gap:14px;padding:18px 20px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);transition:border-color .25s;" style-hover="border-color:rgba(201,162,39,.25)">
+          <div style="width:42px;height:42px;background:rgba(201,162,39,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></div>
+          <div><div style="font-size:12px;color:var(--txt3);margin-bottom:2px;">General Enquiries</div><div style="font-size:15px;font-weight:600;color:var(--txt1);">ampomahgroupservices@gmail.com</div></div>
+        </a>
+        <a href="mailto:godfredampomah05@gmail.com" style="display:flex;align-items:center;gap:14px;padding:18px 20px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);transition:border-color .25s;" style-hover="border-color:rgba(201,162,39,.25)">
+          <div style="width:42px;height:42px;background:rgba(201,162,39,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
+          <div><div style="font-size:12px;color:var(--txt3);margin-bottom:2px;">Get in Touch with Me</div><div style="font-size:15px;font-weight:600;color:var(--txt1);">godfredampomah05@gmail.com</div></div>
+        </a>
+        <a href="https://www.instagram.com/ampgod.paid?igsh=ZWNhbW13NHVxMTd4&amp;utm_source=qr" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:14px;padding:18px 20px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);transition:border-color .25s;" style-hover="border-color:rgba(201,162,39,.25)">
+          <div style="width:42px;height:42px;background:rgba(201,162,39,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"></rect><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></div>
+          <div><div style="font-size:12px;color:var(--txt3);margin-bottom:2px;">Instagram</div><div style="font-size:15px;font-weight:600;color:var(--txt1);">@ampgod.paid</div></div>
+        </a>
+        <div style="display:flex;align-items:center;gap:14px;padding:18px 20px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);">
+          <div style="width:42px;height:42px;background:rgba(201,162,39,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>
+          <div><div style="font-size:12px;color:var(--txt3);margin-bottom:2px;">Based In</div><div style="font-size:15px;font-weight:600;color:var(--txt1);">United States · Operations in Ghana</div></div>
+        </div>
+      </div>
+
+      <div class="reveal d1">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:32px;">
+          <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--txt1);margin-bottom:20px;">Send a Message</h3>
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <input class="form-field" type="text" placeholder="Your Name" id="cname">
+            <input class="form-field" type="email" placeholder="Your Email" id="cemail">
+            <input class="form-field" type="text" placeholder="Subject" id="csubject">
+            <textarea class="form-field" placeholder="Your message..." rows="4" id="cmessage"></textarea>
+            <button class="btn-p" onClick="{{ sendContact }}" style="width:100%;padding:14px;">Send Message</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer style="background:#09090c;border-top:1px solid var(--border);padding:56px 0 32px;">
+  <div style="max-width:var(--maxw);margin:0 auto;padding:0 24px;">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:48px;" class="two-col">
+      <div>
+        <img src="uploads/logo.jpg" alt="Ampomah Group" style="height:52px;width:auto;mix-blend-mode:screen;margin-bottom:16px;">
+        <p style="color:var(--txt3);font-size:14px;line-height:1.75;max-width:300px;margin-bottom:16px;">Building businesses that foster sustainable growth and bridge opportunities between Africa and the world.</p>
+        <a href="https://blinq.me/cmeq1jfsv0jv7s60nagesh8dc" target="_blank" rel="noopener" style="font-size:13px;color:var(--accent);font-weight:600;">View Digital Business Card ↗</a>
+      </div>
+      <div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--txt2);text-transform:uppercase;margin-bottom:16px;">Companies</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <a href="#ventures" style="font-size:14px;color:var(--txt3);transition:color .2s;" style-hover="color:var(--txt1)">SEMDU Real Estates</a>
+          <a href="#ventures" style="font-size:14px;color:var(--txt3);transition:color .2s;" style-hover="color:var(--txt1)">Rolex Rep (GH)</a>
+          <a href="#ventures" style="font-size:14px;color:var(--txt3);transition:color .2s;" style-hover="color:var(--txt1)">Ampomah Delivery GH</a>
+          <a href="#ventures" style="font-size:14px;color:var(--txt3);transition:color .2s;" style-hover="color:var(--txt1)">Travel Expert</a>
+          <a href="#automotive" style="font-size:14px;color:var(--txt3);transition:color .2s;" style-hover="color:var(--txt1)">Car Deals &amp; Rentals</a>
+          <a href="https://foundation.ampgod.org/" target="_blank" rel="noopener" style="font-size:14px;color:var(--accent);">Foundation ↗</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--txt2);text-transform:uppercase;margin-bottom:16px;">Navigate</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <a href="#home" style="font-size:14px;color:var(--txt3);transition:color .2s;" style-hover="color:var(--txt1)">Home</a>
+          <a href="#about" style="font-size:14px;color:var(--txt3);transition:color .2s;" style-hover="color:var(--txt1)">About</a>
+          <a href="#services" style="font-size:14px;color:var(--txt3);transition:color .2s;" style-hover="color:var(--txt1)">Services</a>
+          <a href="#appointment" style="font-size:14px;color:var(--txt3);transition:color .2s;" style-hover="color:var(--txt1)">Book Appointment</a>
+          <a href="#testimonials" style="font-size:14px;color:var(--txt3);transition:color .2s;" style-hover="color:var(--txt1)">Client Stories</a>
+          <a href="#contact" style="font-size:14px;color:var(--txt3);transition:color .2s;" style-hover="color:var(--txt1)">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-top:28px;border-top:1px solid var(--border);">
+      <div style="font-size:13px;color:var(--txt3);">© 2025 Ampomah Group of Companies · ceo.ampgod.org · All Rights Reserved.</div>
+      <a href="https://foundation.ampgod.org/" target="_blank" rel="noopener" style="font-size:13px;color:var(--accent);">Ampomah Foundation ↗</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Back to Top -->
+<button class="{{ bttClass }}" onClick="{{ scrollTop }}">↑</button>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    menuOpen: false,
+    formName: '',
+    formDate: '',
+    formTime: '09:00',
+    formType: 'Video Consultation',
+    formNotes: '',
+    formStatus: 'idle',
+    bttVisible: false,
+  };
+
+  componentDidMount() {
+    const header = document.getElementById('site-header');
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY > 50;
+      if (header) {
+        header.style.background = scrolled ? 'rgba(13,13,16,.97)' : 'rgba(13,13,16,.9)';
+        header.style.borderBottomColor = scrolled ? 'rgba(255,255,255,.07)' : 'transparent';
+      }
+      this.setState({ bttVisible: window.scrollY > 500 });
+    }, { passive: true });
+
+    // Scroll reveal
+    const ro = new IntersectionObserver(
+      (entries) => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); }
+      }),
+      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+    // Counter animation — matches original app.js targets: 5, 100, 2, 500
+    const statsEl = document.querySelector('.stat-grid');
+    if (statsEl) {
+      const co = new IntersectionObserver((entries) => entries.forEach(e => {
+        if (e.isIntersecting) { this._animateCounters(e.target); co.unobserve(e.target); }
+      }), { threshold: 0.5 });
+      co.observe(statsEl);
+    }
+  }
+
+  _animateCounters(container) {
+    container.querySelectorAll('[data-target]').forEach(el => {
+      const target = parseInt(el.dataset.target, 10);
+      const suffix = el.dataset.suffix || '';
+      const dur = 2000;
+      const start = performance.now();
+      const tick = (now) => {
+        const p = Math.min((now - start) / dur, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(eased * target) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  }
+
+  // Exact Google Calendar logic from original app.js — 30-min sessions, owner email pre-added
+  _submitForm() {
+    const { formName, formDate, formTime, formType, formNotes } = this.state;
+    if (!formName.trim() || !formDate || !formTime) {
+      this.setState({ formStatus: 'error' }); return;
+    }
+    const start = new Date(formDate + 'T' + formTime);
+    const end = new Date(start.getTime() + 30 * 60000);
+    const fmt = d => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const ownerEmail = 'godfredampomah05@gmail.com';
+    const details = formType + ' booked via portfolio site' + (formNotes ? '\nNotes: ' + formNotes : '');
+    const url = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+      '&text=' + encodeURIComponent('Meeting with ' + formName) +
+      '&dates=' + fmt(start) + '/' + fmt(end) +
+      '&details=' + encodeURIComponent(details) +
+      '&add=' + encodeURIComponent(ownerEmail) +
+      '&location=' + encodeURIComponent('Google Meet');
+    window.open(url, '_blank');
+    this.setState({ formStatus: 'success' });
+  }
+
+  renderVals() {
+    const s = this.state;
+    return {
+      menuClass: s.menuOpen ? 'mob-menu open' : 'mob-menu',
+      menuIcon: s.menuOpen ? '✕' : '☰',
+      toggleMenu: () => this.setState(p => ({ menuOpen: !p.menuOpen })),
+      closeMenu: () => this.setState({ menuOpen: false }),
+
+      formName: s.formName,
+      formDate: s.formDate,
+      formTime: s.formTime,
+      formType: s.formType,
+      formNotes: s.formNotes,
+      showForm: s.formStatus !== 'success',
+      showSuccess: s.formStatus === 'success',
+      hasError: s.formStatus === 'error',
+
+      setName: e => this.setState({ formName: e.target.value, formStatus: 'idle' }),
+      setDate: e => this.setState({ formDate: e.target.value, formStatus: 'idle' }),
+      setTime: e => this.setState({ formTime: e.target.value, formStatus: 'idle' }),
+      setType: e => this.setState({ formType: e.target.value }),
+      setNotes: e => this.setState({ formNotes: e.target.value }),
+      submitForm: () => this._submitForm(),
+      resetForm: () => this.setState({ formStatus: 'idle', formName: '', formDate: '', formTime: '09:00', formNotes: '' }),
+
+      sendContact: () => {
+        const n = document.getElementById('cname')?.value || '';
+        const e = document.getElementById('cemail')?.value || '';
+        const subj = document.getElementById('csubject')?.value || '';
+        const msg = document.getElementById('cmessage')?.value || '';
+        if (!n || !e) { alert('Please fill in your name and email.'); return; }
+        window.location.href = 'mailto:ampomahgroupservices@gmail.com?subject=' +
+          encodeURIComponent(subj || 'Inquiry from ' + n) +
+          '&body=' + encodeURIComponent('Name: ' + n + '\nEmail: ' + e + '\n\n' + msg);
+      },
+
+      minDate: new Date().toISOString().split('T')[0],
+      bttClass: s.bttVisible ? 'btt' : 'btt hidden',
+      scrollTop: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+    };
+  }
+}
+</script>
+</body>
+</html>
